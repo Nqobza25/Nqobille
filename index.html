@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Nqobile Sibiya - IT Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .gradient-bg { background: linear-gradient(90deg, #4a90e2, #63b3ed); }
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+        .photo-item { aspect-ratio: 1 / 1; overflow: hidden; transition: transform 0.3s ease-in-out; border-radius: 0.5rem; position: relative; }
+        .photo-item img { transition: transform 0.3s ease-in-out; width: 100%; height: 100%; object-fit: cover; }
+        .photo-item .overlay {
+            position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); opacity: 0; transition: opacity 0.3s ease-in-out; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 1rem;
+        }
+        .photo-item:hover .overlay { opacity: 1; }
+        .photo-item:hover img { transform: scale(1.05); }
+        .btn {
+            transition: transform 0.2s ease-out, filter 0.2s ease-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);     
+            filter: brightness(1.1);
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #back-to-top:hover {
+            opacity: 1;
+        }
+    </style>
+    <style>
+        /* Entrance Animation */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card base style */
+        .content-card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            padding: 1.5rem; /* 24px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem; /* Add space between cards */
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Specific card styles */
+        .education-card-header, .experience-card-header {
+            border-bottom: 1px solid #e5e7eb; /* light gray */
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* space between icon and text */
+        }
+
+        /* Subtle background gradients */
+        #about { background: linear-gradient(135deg, #ffffff, #f9fafb); }
+        #education { background: linear-gradient(135deg, #f9fafb, #f3f4f6); }
+        #experience { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); }
+        #skills { background: linear-gradient(135deg, #e5e7eb, #d1d5db); }
+        #contact { background: linear-gradient(135deg, #d1d5db, #9ca3af); } /* Example */
+    </style>
+</head>
+<body class="font-sans leading-normal tracking-normal text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100" 
+      x-data="{ 
+          darkMode: localStorage.getItem('darkMode') === 'true', 
+          toggleDarkMode() { 
+              this.darkMode = !this.darkMode; 
+              localStorage.setItem('darkMode', this.darkMode);
+              document.documentElement.classList.toggle('dark', this.darkMode);
+          }
+      }"
+      x-init="document.documentElement.classList.toggle('dark', darkMode)"
+      :class="{ 'dark': darkMode }">
+    <nav class="sticky top-0 z-50 transition-all duration-300" 
+         x-data="{ isOpen: false, isScrolled: false }" 
+         @scroll.window="isScrolled = (window.pageYOffset > 50)" 
+         :class="{ 'bg-white shadow-lg': isScrolled, 'bg-white bg-opacity-90 backdrop-blur-sm': !isScrolled }">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <a href="#" class="flex items-center py-4 px-2">
+                        <span class="font-semibold text-gray-500 text-lg">Nqobile Sibiya</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#home" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Home</a>
+                    <a href="#about" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">About</a>
+                    <a href="#education" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Education</a>
+                    <a href="#experience" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Experience</a>
+                    <a href="#skills" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Skills</a>
+                    <a href="#certifications" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">My Certifications</a>
+                    <a href="#projects" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">My Projects</a>
+                    <a href="#contact" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button @click="isOpen = !isOpen" class="outline-none mobile-menu-button">
+                        <svg class="w-6 h-6 text-gray-500 hover:text-blue-500" x-show="!isOpen" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Dark Mode Toggle -->
+                <button @click="toggleDarkMode" 
+                        class="ml-4 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 dark:focus:ring-yellow-400"
+                        aria-label="Toggle dark mode">
+                    <span x-show="!darkMode">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-yellow-400 text-xl"></i> <!-- Moon Icon -->
+                    </span>
+                    <span x-show="darkMode" x-cloak>
+                        <i class="fas fa-sun text-yellow-500 hover:text-yellow-300 text-xl"></i> <!-- Sun Icon -->
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="md:hidden" x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+            <a href="#home" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">Home</a>
+            <a href="#about" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">About</a>
+            <a href="#education" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">Education</a>
+            <a href="#experience" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">Experience</a>
+            <a href="#skills" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">Skills</a>
+            <a href="#certifications" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">My Certifications</a>
+            <a href="#projects" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">My Projects</a>
+            <a href="#contact" class="block py-2 px-4 text-sm hover:bg-blue-500 hover:text-white">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="gradient-bg text-white h-screen flex items-center justify-center text-center relative overflow-hidden">
+            <!-- Optional: Add subtle background elements like shapes or patterns -->
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 opacity-70 z-0"></div>
+            <div class="z-10 relative px-4">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in-down">Nqobile Sibiya</h1>
+                <p class="text-xl md:text-2xl mb-8 animate-fade-in-up">Passionate IT Student | Aspiring Application Developer</p>
+                <a href="#about" class="btn bg-white text-blue-600 px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition duration-300">Learn More</a>
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-10 md:mb-0 md:mr-10 text-center">
+                    <img src="./Nqo.jpeg" alt="Nqobile Sibiya" class="rounded-full mx-auto w-64 h-64 object-cover shadow-lg border-4 border-white"> 
+                </div>
+                <div class="md:w-2/3 text-center md:text-left">
+                    <h2 class="text-4xl font-bold mb-6">About Me</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        I am a highly motivated and dedicated recent graduate in Computer Information Science (Application Development) from The IIE Varsity College, having achieved distinction passes. With a strong foundation in programming, networking, and system design, I am passionate about leveraging technology to solve real-world problems.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        Currently honing my skills as a Cloud Support Intern at AWS, my goal is to become a skilled Cloud Engineer and Full-Stack Developer. I am constantly seeking opportunities to expand my knowledge in cloud computing (AWS, Azure), web development frameworks, and database management.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        Alongside my technical pursuits, I am also a Graphic Designer and enjoy exploring creative technologies, including participating as a GoogleFX Imagen Tester.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-12">Education</h2>
+
+                <!-- Combined Education Cards (Original Content Structure) -->
+                <div class="flex flex-col md:flex-row -mx-4">
+
+                    <!-- Varsity College -->
+                    <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                        <div class="content-card h-full">
+                            <div class="education-card-header">
+                                <i class="fas fa-university text-3xl text-blue-500"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold text-blue-600">Bachelor's in Computer Science in Application Development <span class="text-sm font-normal text-green-600">(Graduated with Distinction)</span></h3>
+                                    <p class="text-gray-600">IIe Varsity College, Sandton</p>
+                                    <p class="text-gray-600">February 2022 – November 2024</p>
+                                </div>
+                            </div>
+                            <p class="font-medium text-gray-800 mb-2 mt-4">Key Modules:</p>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                <li>Java Programming 1A, 1B, 2A, 2B, 3A, 3B</li>
+                                <li>Network Engineering 1A, 1B</li>
+                                <li>System Analysis and Design</li>
+                                <li>C# Programming</li>
+                                <li>Cloud Development</li>
+                                <li>Databases and Advanced Databases</li>
+                                <li>IT Project Management</li>
+                                <!-- Add other relevant modules if available -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- CTU Training -->
+                    <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                        <div class="content-card h-full">
+                            <div class="education-card-header">
+                                <i class="fas fa-cogs text-3xl text-green-500"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold text-green-600">IT Engineering Course</h3>
+                                    <p class="text-gray-600">CTU Training Solutions, Auckland Park</p>
+                                    <p class="text-gray-600">2021</p>
+                                </div>
+                            </div>
+                            <p class="font-medium text-gray-800 mb-2 mt-4">Key Modules:</p>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                <li>Robotic Development</li>
+                                <li>Python Programming</li>
+                                <li>Computer Architecture</li>
+                                <li>Cloud Fundamentals</li>
+                                <li>Network Architecture</li>
+                                <li>Programmer Ethics</li>
+                                <li>Principles of Program Design</li>
+                            </ul>
+                            <!-- Separator or subheading for NQF4 -->
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <h4 class="text-lg font-semibold text-green-600 mb-2">Further Education and Training Certificate: IT Technical Support NQF 4</h4>
+                                <p class="text-gray-600 mb-2">CTU Training Solutions | Feb 2019 - Dec 2019</p>
+                                <p class="font-medium text-gray-800 mb-2">Skills:</p>
+                                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                    <li>A+</li>
+                                    <li>N+</li>
+                                    <li>Server+</li>
+                                    <li>IT communication Skills</li>
+                                    <li>Introduction to Project Management</li>
+                                    <li>Microsoft Office Suite</li>
+                                </ul>
+                            </div>
+                            <!-- Cloud Computing Training - Moved Here -->
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <h4 class="text-lg font-semibold text-purple-600 mb-2">Cloud Computing Training</h4>
+                                <p class="text-gray-600 mb-2">CTU Training Solutions | December 2020</p>
+                                <p class="font-medium text-gray-800 mb-2">Skills Learned:</p>
+                                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                    <li>Cloud Concepts</li>
+                                    <li>Azure Services</li>
+                                    <li>AWS Services</li>
+                                    <li>Security in the Cloud</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-12">Work Experience</h2>
+
+                <div class="flex flex-wrap -mx-4 justify-center">
+
+                    <!-- AWS Intern Experience Card -->
+                    <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8">
+                        <div class="content-card experience-card h-full">
+                            <div>
+                                <div class="experience-card-header">
+                                    <i class="fab fa-aws text-3xl text-yellow-500"></i> <!-- AWS icon -->
+                                    <div>
+                                        <h3 class="text-xl font-bold text-yellow-600">Cloud Support Associate</h3>
+                                        <p class="text-gray-600">Amazon Web Services (AWS)</p>
+                                        <p class="text-gray-600">February 3, 2025 - Present</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-700 mt-4">Providing technical support and solutions for AWS cloud services, assisting customers with troubleshooting, configuration, and best practices.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Imagen Tester Card -->
+                    <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8">
+                        <div class="content-card experience-card h-full">
+                            <div>
+                                <div class="experience-card-header">
+                                     <i class="fab fa-google text-3xl text-red-500"></i> <!-- Google icon -->
+                                     <div>
+                                        <h3 class="text-xl font-bold text-red-600">Imagen FX Tester</h3>
+                                        <p class="text-gray-600">Google (Volunteer)</p>
+                                        <p class="text-gray-600">June 2024 - Present</p> 
+                                     </div>
+                                </div>
+                                <p class="text-gray-700 mt-4">Volunteering to test and provide feedback on Google's Imagen text-to-image AI models.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tutor Experience Card -->
+                    <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8">
+                        <div class="content-card experience-card h-full">
+                            <div>
+                                <div class="experience-card-header">
+                                    <i class="fas fa-briefcase text-3xl text-indigo-500"></i>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-indigo-600">Tutor</h3>
+                                        <p class="text-gray-600">WeRTutors</p>
+                                        <p class="text-gray-600">March 2022 - Present</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-700 mt-4">Part-time tutor in information technology, helping students understand the field of IT along with practical programming knowledge like Java and SQL database management.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cashier Experience Card -->
+                    <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8">
+                        <div class="content-card experience-card h-full">
+                            <div>
+                                <div class="experience-card-header">
+                                    <i class="fas fa-cash-register text-3xl text-orange-500"></i>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-orange-600">Cashier</h3>
+                                        <p class="text-gray-600">Green Way Fruit and Veg, Mpumalanga</p>
+                                        <p class="text-gray-600">March 2014 - January 2022</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-700 mt-4">Worked as a cashier, receiving money and calculating change for customers along with counting supplies for the company.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-12">Skills</h2>
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="skill-card hover:scale-105 hover:shadow-lg transition-transform duration-200 animate-fadeIn">
+                        <div class="skill-card-inner">
+                            <div class="skill-card-front p-4">
+                                <div>
+                                    <i class="fas fa-code skill-icon"></i>
+                                    <h3 class="text-xl font-bold">Programming</h3>
+                                </div>
+                            </div>
+                            <div class="skill-card-back p-4">
+                                <ul class="text-sm">
+                                    <li>Java</li>
+                                    <li>C#</li>
+                                    <li>Python</li>
+                                    <li>JavaScript</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill-card hover:scale-105 hover:shadow-lg transition-transform duration-200 animate-fadeIn">
+                        <div class="skill-card-inner">
+                            <div class="skill-card-front p-4">
+                                <div>
+                                    <i class="fas fa-database skill-icon"></i>
+                                    <h3 class="text-xl font-bold">Databases</h3>
+                                </div>
+                            </div>
+                            <div class="skill-card-back p-4">
+                                <ul class="text-sm">
+                                    <li>SQL</li>
+                                    <li>MySQL</li>
+                                    <li>MongoDB</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill-card hover:scale-105 hover:shadow-lg transition-transform duration-200 animate-fadeIn">
+                        <div class="skill-card-inner">
+                            <div class="skill-card-front p-4">
+                                <div>
+                                    <i class="fas fa-laptop-code skill-icon"></i>
+                                    <h3 class="text-xl font-bold">Web Technologies</h3>
+                                </div>
+                            </div>
+                            <div class="skill-card-back p-4">
+                                <ul class="text-sm">
+                                    <li>HTML</li>
+                                    <li>CSS</li>
+                                    <li>JavaScript</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill-card hover:scale-105 hover:shadow-lg transition-transform duration-200 animate-fadeIn">
+                        <div class="skill-card-inner">
+                            <div class="skill-card-front p-4">
+                                <div>
+                                    <i class="fas fa-tools skill-icon"></i>
+                                    <h3 class="text-xl font-bold">Tools</h3>
+                                </div>
+                            </div>
+                            <div class="skill-card-back p-4">
+                                <ul class="text-sm">
+                                    <li>Microsoft Azure</li>
+                                    <li>Android Studio</li>
+                                    <li>Git &amp; GitHub</li>
+                                    <li>Visual Studio 2022</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill-card hover:scale-105 hover:shadow-lg transition-transform duration-200 animate-fadeIn">
+                        <div class="skill-card-inner">
+                            <div class="skill-card-front p-4">
+                                <div>
+                                    <i class="fas fa-palette skill-icon"></i>
+                                    <h3 class="text-xl font-bold">Graphic Design</h3>
+                                </div>
+                            </div>
+                            <div class="skill-card-back p-4">
+                                <ul class="text-sm">
+                                    <li>Canva</li>
+                                    <li>Adobe Creative Suite</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-8">Certifications</h2>
+                 <p class="text-center text-lg text-gray-600 mb-12">View my verified certifications below and on Credly.</p>
+
+                 <!-- Credly Button -->
+                 <div class="text-center mb-12">
+                    <a href="https://www.credly.com/users/nqobile-sibiya" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                        <i class="fas fa-external-link-alt mr-2"></i> Visit Full Credly Profile
+                    </a>
+                </div>
+
+                <!-- Certification Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+                    <!-- Canva Certification Card -->
+                    <div class="content-card certification-card text-center hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
+                        <div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg" alt="Canva Logo" class="mx-auto mb-4 h-20 object-contain p-2"> <!-- Updated Canva logo -->
+                            <h3 class="text-lg font-semibold mb-1 text-purple-600">Canva Essentials</h3>
+                            <p class="text-sm text-gray-500 mb-3">Canva Design School</p>
+                        </div>
+                        <a href="https://www.canva.com/design-school/certification-award/22572924-8769-46a8-b7a5-bd6799f05419" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">
+                            View Certificate
+                        </a>
+                    </div>
+
+                    <!-- MTA JavaScript -->
+                    <div class="content-card certification-card text-center hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
+                        <div>
+                            <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/MTA-Introduction_to_Programming_Using_JavaScript-600x600.png" alt="MTA JavaScript Certification" class="w-24 h-24 mx-auto mb-4 object-contain">
+                            <h3 class="text-lg font-semibold mb-1 text-blue-600">MTA: Intro to Programming Using JavaScript</h3>
+                            <p class="text-sm text-gray-500 mb-3">Microsoft</p>
+                        </div>
+                        <a href="https://www.credly.com/badges/YOUR_BADGE_ID_HERE" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"> <!-- Update Link -->
+                            View on Credly
+                        </a>
+                    </div>
+
+                    <!-- MTA Python -->
+                    <div class="content-card certification-card text-center hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
+                        <div>
+                            <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/MTA-Introduction_to_Programming_Using_Python-600x600.png" alt="MTA Python Certification" class="w-24 h-24 mx-auto mb-4 object-contain">
+                            <h3 class="text-lg font-semibold mb-1 text-blue-600">MTA: Intro to Programming Using Python</h3>
+                            <p class="text-sm text-gray-500 mb-3">Microsoft</p>
+                        </div>
+                         <a href="https://www.credly.com/badges/YOUR_BADGE_ID_HERE" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"> <!-- Update Link -->
+                            View on Credly
+                        </a>
+                    </div>
+
+                    <!-- MTA HTML/CSS -->
+                    <div class="content-card certification-card text-center hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between">
+                        <div>
+                            <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/MTA-Introduction_to_Programming_Using_HTML_and_CSS-600x600.png" alt="MTA HTML/CSS Certification" class="w-24 h-24 mx-auto mb-4 object-contain">
+                            <h3 class="text-lg font-semibold mb-1 text-blue-600">MTA: Intro to Programming Using HTML & CSS</h3>
+                            <p class="text-sm text-gray-500 mb-3">Microsoft</p>
+                        </div>
+                        <a href="https://www.credly.com/badges/YOUR_BADGE_ID_HERE" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"> <!-- Update Link -->
+                            View on Credly
+                        </a>
+                    </div>
+
+                    <!-- AWS Networking Certification Card -->
+                    <div class="content-card certification-card text-center hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md">
+                        <div>
+                            <img src="./Aws-network-cert.jpeg" alt="AWS Networking Certification Badge" class="mx-auto mb-4 h-20 object-contain"> <!-- Use specific image -->
+                            <h3 class="text-lg font-semibold mb-1 text-yellow-700 dark:text-yellow-500">AWS Networking Basics</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Amazon Web Services</p>
+                        </div>
+                         <!-- Optional: Add Credly link if available -->
+                         <!-- 
+                         <a href="#" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded text-xs dark:bg-yellow-600 dark:hover:bg-yellow-700"> 
+                            View on Credly
+                         </a>
+                         -->
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-8">My Projects</h2>
+
+                <div class="photo-grid"> 
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault.jpg" alt="Video 1" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/qlKQAB2iiqQ" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 1</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(1).jpg" alt="Video 2" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/e0ePOGZzB3Y" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 2</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(2).jpg" alt="Video 3" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/ssj81DV0_uM" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 3</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(3).jpg" alt="Video 4" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/eu_Z9ffnEDE" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 4</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(4).jpg" alt="Video 6" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/cvjfoRxQlRY" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 6</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(5).jpg" alt="Video 7" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/P7vY7QRaFTg" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 7</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(6).jpg" alt="Video 8" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/FyGzSRJ4-HY" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 8</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(7).jpg" alt="Video 9" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/_Z3ELCvuO94" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 9</span>
+                        </a>
+                    </div>
+                    <div class="photo-item relative group">
+                        <img loading="lazy" src="./Nqobile Sibiya - Computer Information Science Student_files/maxresdefault(8).jpg" alt="Video 10" class="rounded-lg shadow-lg w-full h-full object-cover">
+                        <a href="https://youtu.be/FvPhwE9DI3c" target="_blank" class="overlay">
+                            <i class="fas fa-play-circle text-white text-4xl"></i>
+                            <span class="text-white text-lg ml-2">Video 10</span>
+                        </a>
+                    </div>
+                </div> 
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-8">Contact Me</h2>
+                <div class="flex flex-wrap -mx-4">
+                    <div class="w-full md:w-1/3 px-4 mb-8">
+                        <div class="bg-white rounded-lg shadow-lg p-6 h-full">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-envelope text-blue-500 text-2xl mr-4"></i>
+                                <div>
+                                    <h3 class="font-bold">Email</h3>
+                                    <p class="text-gray-600">Jhk3119@gmail.com</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600">Feel free to email me for any inquiries or collaboration opportunities.</p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 px-4 mb-8">
+                        <div class="bg-white rounded-lg shadow-lg p-6 h-full">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-map-marker-alt text-blue-500 text-2xl mr-4"></i>
+                                <div>
+                                    <h3 class="font-bold">Location</h3>
+                                    <p class="text-gray-600">Johannesburg, Gauteng</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600">Based in Johannesburg, but open to remote opportunities worldwide.</p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 px-4 mb-8">
+                        <div class="bg-white rounded-lg shadow-lg p-6 h-full">
+                            <div class="flex items-center mb-4">
+                                <i class="fab fa-linkedin text-blue-500 text-2xl mr-4"></i>
+                                <div>
+                                    <h3 class="font-bold">LinkedIn</h3>
+                                    <p class="text-gray-600">Connect with me</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600">Let's connect on LinkedIn for professional networking.</p>
+                            <a href="https://www.linkedin.com/in/nqobile-sibiya-530657218/" target="_blank" class="text-blue-500 hover:underline mt-2 inline-block">Visit My Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4 text-center">
+                <p>&copy; 2025 Nqobile Sibiya. All rights reserved.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript for Scroll Animations -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                } else {
+                    // Optional: remove class if you want animation to repeat on scroll up
+                    // entry.target.classList.remove('is-visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-5 right-5 bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg hidden transition-opacity duration-300 opacity-0 z-50">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</body>
+</html>
