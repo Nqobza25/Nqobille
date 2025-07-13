@@ -387,3 +387,96 @@ footer {
 .dark .timeline-description {
     color: #9ca3af;
 }
+
+/* Enhanced Navigation Styles */
+.nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    background: linear-gradient(to right, transparent 50%, rgba(0, 170, 255, 0.1) 50%);
+    background-size: 200% 100%;
+    background-position: 0 0;
+}
+
+.nav-link:hover {
+    background-position: -100% 0;
+    transform: translateY(-2px);
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #00aaff;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::before {
+    width: 70%;
+}
+
+.nav-link.active::before {
+    width: 70%;
+}
+
+/* GitHub icon specific styling */
+.nav-link .fab.fa-github {
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover .fab.fa-github {
+    transform: rotate(360deg) scale(1.2);
+}
+
+/* Mobile menu enhancements */
+.mobile-menu {
+    background: rgba(34, 34, 34, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-button {
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+    transform: rotate(90deg);
+}
+
+/* Dark mode enhancements */
+.dark .nav-link:hover {
+    background: rgba(0, 170, 255, 0.1);
+}
+
+.dark .mobile-menu {
+    background: rgba(17, 24, 39, 0.95);
+}
+
+/* Navigation animation for scroll */
+.nav-scrolled {
+    backdrop-filter: blur(10px);
+    background: rgba(34, 34, 34, 0.9);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.nav-hidden {
+    transform: translateY(-100%);
+}
+
+/* Menu item hover effect */
+@keyframes menuHover {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.nav-link:hover {
+    animation: menuHover 0.3s ease-in-out;
+}
