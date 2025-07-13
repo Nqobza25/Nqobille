@@ -4,6 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     scroll-behavior: smooth;
+    /* cursor styling removed */
 }
 
 body {
@@ -258,4 +259,131 @@ footer {
     padding: 1.5rem;
     background: #222; /* Match header */
     color: #ccc;
+}
+
+
+
+/* Timeline Section Styles */
+.timeline-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #00aaff, #0056b3);
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.timeline-item {
+    display: flex;
+    justify-content: flex-end;
+    padding: 40px 0;
+    width: 50%;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 0.6s ease;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.timeline-item:nth-child(even) {
+    align-self: flex-end;
+    justify-content: flex-start;
+    transform: translateX(100px);
+}
+
+.timeline-item:nth-child(even).visible {
+    transform: translateX(0);
+}
+
+.timeline-content {
+    width: 90%;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #00aaff;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -60px;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.5);
+}
+
+.timeline-item:nth-child(even) .timeline-content::before {
+    left: -60px;
+    right: auto;
+}
+
+.timeline-date {
+    color: #00aaff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.timeline-description {
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Timeline Animation */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 170, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0); }
+}
+
+.timeline-content::before {
+    animation: pulse 2s infinite;
+}
+
+/* Dark mode adjustments for timeline */
+.dark .timeline-content {
+    background: rgba(31, 41, 55, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .timeline-title {
+    color: #e5e7eb;
+}
+
+.dark .timeline-description {
+    color: #9ca3af;
 }
